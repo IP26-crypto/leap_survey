@@ -1056,7 +1056,7 @@ const EJ_TEMPLATE = 'template_kzg8y2o';
 const EJ_KEY      = 'QYB3mWazfjRs4U0-6';
 
 async function sendSurveyEmail(tester, surveyId, surveyName) {
-  const surveyLink = `${window.location.origin}${window.location.pathname}?survey=${surveyId}&tester=${tester.id}`;
+  const surveyLink = `${window.location.origin}${window.location.pathname}#survey=${surveyId}&tester=${tester.id}`;
   return emailjs.send(EJ_SERVICE, EJ_TEMPLATE, {
     to_name:     tester.fn || tester.name || 'Beta Tester',
     to_email:    tester.email,
@@ -1075,7 +1075,8 @@ async function sendSurveyEmail(tester, surveyId, surveyName) {
   emailjs.init(EJ_KEY);
 
   // Check if opened from a survey email link
-  const params = new URLSearchParams(window.location.search);
+  const hash = window.location.hash.slice(1); // remove the #
+  const params = new URLSearchParams(hash);
   const surveyId = params.get('survey');
   const testerId = params.get('tester');
 
