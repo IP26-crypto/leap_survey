@@ -1074,20 +1074,25 @@ async function sendSurveyEmail(tester, surveyId, surveyName) {
   initSupabase(SUPABASE_URL, SUPABASE_KEY);
   emailjs.init(EJ_KEY);
 
-  // Check if opened from a survey email link
-  const hash = window.location.hash.slice(1); // remove the #
-  const params = new URLSearchParams(hash);
-  const surveyId = params.get('survey');
-  const testerId = params.get('tester');
+  function checkHash(){
+    const hash = window.location.hash.slice(1);
+    const params = new URLSearchParams(hash);
+    const surveyId = params.get('survey');
+    const testerId = params.get('tester');
 
-  if(surveyId && testerId){
-    // Go straight to the survey, skip signup
-    document.getElementById('main-nav').style.display = 'none';
-    showSurveyPage(surveyId, testerId);
-  } else {
-    showView('signup');
-    renderSignup();
+    if(surveyId && testerId){
+      document.getElementById('main-nav').style.display = 'none';
+      showSurveyPage(surveyId, testerId);
+    } else {
+      document.getElementById('main-nav').style.display = '';
+      showView('signup');
+      renderSignup();
+    }
   }
+
+  // Run on load and whenever hash changes (e.g. clicking email link while site is open)
+  window.addEventListener('hashchange', checkHash);
+  checkHash();
 })();
 </script>
 </body>
