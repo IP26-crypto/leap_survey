@@ -1073,8 +1073,20 @@ async function sendSurveyEmail(tester, surveyId, surveyName) {
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhhZGR1cWhwc2NtdWRwb21uZGZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4NzIxODUsImV4cCI6MjA5MjQ0ODE4NX0.ZzQRTag2QIxdgFRrr5B70_SUd2qlJzXLeYaefQ8swnM';
   initSupabase(SUPABASE_URL, SUPABASE_KEY);
   emailjs.init(EJ_KEY);
-  showView('signup');
-  renderSignup();
+
+  // Check if opened from a survey email link
+  const params = new URLSearchParams(window.location.search);
+  const surveyId = params.get('survey');
+  const testerId = params.get('tester');
+
+  if(surveyId && testerId){
+    // Go straight to the survey, skip signup
+    document.getElementById('main-nav').style.display = 'none';
+    showSurveyPage(surveyId, testerId);
+  } else {
+    showView('signup');
+    renderSignup();
+  }
 })();
 </script>
 </body>
